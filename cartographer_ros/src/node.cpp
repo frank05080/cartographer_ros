@@ -585,7 +585,7 @@ bool Node::handleStartTrajectory(
   std::tie(std::ignore, trajectory_options) = LoadOptions(
       request->configuration_directory, request->configuration_basename);
 
-  if (request->use_initial_pose) {
+  if (request->use_initial_pose) { // 支持多个机器人建图，如果使用初始pose，则会提供对应的initial_pose
     const auto pose = ToRigid3d(request->initial_pose);
     if (!pose.IsValid()) {
       response->status.message =
@@ -629,7 +629,7 @@ bool Node::handleStartTrajectory(
     response->status.code = cartographer_ros_msgs::msg::StatusCode::INVALID_ARGUMENT;
   } else {
     response->status.message = "Success.";
-    response->trajectory_id = AddTrajectory(trajectory_options);
+    response->trajectory_id = AddTrajectory(trajectory_options); // 在Node中add一条trajectory
     response->status.code = cartographer_ros_msgs::msg::StatusCode::OK;
   }
   return true;
